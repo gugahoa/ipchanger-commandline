@@ -57,7 +57,14 @@ def startTibia(tibia_path, ip):
 
 if __name__ == '__main__':
 	tibia_clients = loadTibiaClients()
-	valid_version = sys.argv[1] == "new"
+	try:
+		valid_version = sys.argv[1] == "new"
+	except IndexError:
+		print("Invalid argument")
+		print("Usage: ./main.py new")
+		print("Usage: ./main.py tibia_version ip")
+		exit()
+
 	if valid_version:
 		tibia_path = ""
 		while not tibia_path:
@@ -90,7 +97,7 @@ if __name__ == '__main__':
 			print("Update Tibia path for version " + tibia_version)
 			exit()
 	except KeyError:
-			print("Key " + tibia_version + " does not exist")
+			print("Path to " + tibia_version + " does not exist. Register using ./main.py new")
 			exit()
 
 	if sys.argv[2]:
