@@ -1,7 +1,5 @@
-import os
-import re
 from ptrace.debugger.debugger import PtraceDebugger
-from ptrace.binding import ptrace_detach, ptrace_attach
+from ptrace.binding import ptrace_detach
 
 class TibiaProcess:
 	ips = [
