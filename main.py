@@ -2,6 +2,8 @@
 import sys
 import os
 import json
+import subprocess
+from tibia_process import TibiaProcess
 
 def opener(path, flags):
 	dir_fd = os.open(os.path.expanduser("~/"), os.O_RDONLY)
@@ -45,7 +47,12 @@ def insertTibiaClient(tibia_clients, tibia_version, tibia_path):
 	with open(".tibia-clients", "w", opener=opener) as f:
 		json.dump(tibia_clients, f)
 
-
+def startTibia(tibia_path, ip):
+	child_proc = subprocess.Popen(tibia_path, cwd=tibia_path[:-5])
+	tibia_client = TibiaProcess(child_proc)
+	tibia_client.changeRsa()
+	tibia_client.changeIp(ip)
+	tibia_client.detach()
 
 if __name__ == '__main__':
 	tibia_clients = loadTibiaClients()
@@ -77,8 +84,13 @@ if __name__ == '__main__':
 			tibia_version = input("Invalid Tibia version, input it again: ")
 			valid_version = False
 
-	if not os.path.isfile(tibia_clients[tibia_version]):
-		print("Update Tibia path for version " + tibia_version)
-		exit()
+	try:
+		if not os.path.isfile(tibia_clients[tibia_version]):
+			print("Update Tibia path for version " + tibia_version)
+			exit()
+	except KeyError:
+			print("Key " + tibia_version + " does not exist")
+			exit()
 
-	startTibia(tibia_clients[tibia_version], sys.argv[1])
+	if sys.argv[2]:
+		startTibia(tibia_clients[tibia_version], sys.argv[2])
